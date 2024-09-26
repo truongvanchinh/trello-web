@@ -32,7 +32,7 @@ function Profiles() {
             aria-expanded={open ? 'true' : undefined}
           >
             <Avatar
-              sx={{ width: 32, height: 32 }}
+              sx={{ width: 34, height: 34 }}
               src='https://yt3.ggpht.com/0xsjFzKuqCBY9LAMrsgHqFLoA3oiiMTGzNrY3rzdxhIK5p21M094IkXDhEsSL4odGFJeKEZLWQ=s88-c-k-c0x00ffffff-no-rj'
               alt='Chinh avatar'></Avatar>
           </IconButton>
