@@ -14,10 +14,12 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
+import { mapOrder } from '~/utils/sorts'
 
 import ListCards from './ListCards/ListCards'
 
-function Column() {
+function Column({ column }) {
+  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
@@ -51,7 +53,7 @@ function Column() {
           fontWeight: 'bold',
           cursor: 'pointer',
           flex: 1
-        }}>Column Title</Typography>
+        }}>{column?.title}</Typography>
         <Box>
           <Tooltip title="List actions">
             <MoreHorizIcon
@@ -103,7 +105,7 @@ function Column() {
         </Box>
       </Box>
       {/* List Cards */}
-      <ListCards />
+      <ListCards cards={orderedCards}/>
       {/* Box Column Footer */}
       <Box sx={{
         height: (theme) => theme.trello.columnFooterHeight,
