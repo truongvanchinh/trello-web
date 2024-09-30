@@ -14,9 +14,7 @@ import {
   DragOverlay,
   defaultDropAnimationSideEffects,
   closestCorners,
-  closestCenter,
   pointerWithin,
-  rectIntersection,
   getFirstCollision
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
@@ -116,7 +114,7 @@ function BoardContent({ board }) {
     const { active, over } = event
     if (!active || !over) { return } // chua toi uu
 
-    const { id: activeDraggingCardId, data: { current: activeDraggingCardData} } = active
+    const { id: activeDraggingCardId, data: { current: activeDraggingCardData } } = active
     const { id: overCardId } = over
 
     const activeColumn = findColumnByCardId(activeDraggingCardId)
@@ -143,7 +141,7 @@ function BoardContent({ board }) {
     if (!active || !over) { return } // chua toi uu
 
     if (activeItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
-      const { id: activeDraggingCardId, data: { current: activeDraggingCardData} } = active
+      const { id: activeDraggingCardId, data: { current: activeDraggingCardData } } = active
       const { id: overCardId } = over
 
       const activeColumn = findColumnByCardId(activeDraggingCardId)
@@ -203,14 +201,13 @@ function BoardContent({ board }) {
     }
 
     const pointerIntersections = pointerWithin(args)
-    const intersections = !!pointerIntersections?.length > 0
-      ? pointerIntersections
-      : rectIntersection(args)
-    let overId = getFirstCollision(intersections, 'id')
+    if (!pointerIntersections?.length) return
+
+    let overId = getFirstCollision(pointerIntersections, 'id')
     if (overId) {
       const checkColumn = orderedColumns?.find(column => column._id === overId)
       if (checkColumn) {
-        overId = closestCenter({
+        overId = closestCorners({
           ...args,
           droppableContainers: args.droppableContainers.filter(container => {
             container.id !== overId &&
