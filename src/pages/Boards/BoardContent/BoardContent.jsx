@@ -4,6 +4,7 @@ import ListColumns from './ListColumns/ListColumns'
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
 import { mapOrder } from '~/utils/sorts'
+import { generatePlaceholderCard } from '~/utils/formatters'
 import {
   DndContext,
   KeyboardSensor,
@@ -20,7 +21,7 @@ import {
   getFirstCollision
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'drag_column',
@@ -84,6 +85,10 @@ function BoardContent({ board }) {
 
       if (nextActiveColumn) {
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
+        if (isEmpty(nextActiveColumn.cards)) {
+          console.log('Card cuoi dc keo di')
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+        }
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
       }
       if (nextOverColumn) {
@@ -93,8 +98,12 @@ function BoardContent({ board }) {
           columnId: nextOverColumn._id
         }
         nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebuild_activeDraggingCardData)
+
+        nextOverColumn.cards = nextOverColumn.cards.filter(card => !card.FE_PlaceholderCard)
+
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
+      console.log('Next column', nextColumns)
       return nextColumns
     })
   }
@@ -116,7 +125,7 @@ function BoardContent({ board }) {
     const { active, over } = event
     if (!active || !over) { return } // chua toi uu
 
-    const { id: activeDraggingCardId, data: { current: activeDraggingCardData} } = active
+    const { id: activeDraggingCardId, data: { current: activeDraggingCardData } } = active
     const { id: overCardId } = over
 
     const activeColumn = findColumnByCardId(activeDraggingCardId)
@@ -143,7 +152,7 @@ function BoardContent({ board }) {
     if (!active || !over) { return } // chua toi uu
 
     if (activeItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
-      const { id: activeDraggingCardId, data: { current: activeDraggingCardData} } = active
+      const { id: activeDraggingCardId, data: { current: activeDraggingCardData } } = active
       const { id: overCardId } = over
 
       const activeColumn = findColumnByCardId(activeDraggingCardId)
@@ -203,14 +212,17 @@ function BoardContent({ board }) {
     }
 
     const pointerIntersections = pointerWithin(args)
-    const intersections = !!pointerIntersections?.length > 0
-      ? pointerIntersections
-      : rectIntersection(args)
-    let overId = getFirstCollision(intersections, 'id')
+    if (!pointerIntersections?.length) return
+    // const intersections = !!pointerIntersections?.length > 0
+    //   ? pointerIntersections
+    //   : rectIntersection(args)
+    let overId = getFirstCollision(pointerIntersections, 'id')
     if (overId) {
       const checkColumn = orderedColumns?.find(column => column._id === overId)
+      // console.log('checkColumn: ', checkColumn)
+      // console.log('overId: ', overId)
       if (checkColumn) {
-        overId = closestCenter({
+        overId = closestCorners({
           ...args,
           droppableContainers: args.droppableContainers.filter(container => {
             container.id !== overId &&

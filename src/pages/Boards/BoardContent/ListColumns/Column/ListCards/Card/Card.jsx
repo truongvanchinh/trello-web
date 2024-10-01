@@ -17,7 +17,6 @@ function Card({ card }) {
            !!card?.comments?.length ||
            !!card?.attachments?.length
   }
-
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
     data: { ...card }
@@ -40,7 +39,11 @@ function Card({ card }) {
         cursor: 'pointer',
         boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
         borderRadius: '12px',
-        overflow: 'unset'
+        overflow: 'unset',
+        opacity: card.FE_PlaceholderCard ? '0' : '1',
+        minWidth: card.FE_PlaceholderCard ? '280px' : 'unset',
+        pointerEvents: card.FE_PlaceholderCard ? 'none' : 'unset',
+        position: card.FE_PlaceholderCard ? 'fixed' : 'unset'
       }}
     >
       {card?.cover &&
@@ -60,7 +63,7 @@ function Card({ card }) {
         <CardActions sx={{ p: '0 4px 8px 4px' }}>
           {!!card?.memberIds?.length &&
             <Button size="small" startIcon={<PeopleAltIcon/>}>
-              {card?.memberIds.length}
+              {card?.memberIds?.length}
             </Button>}
           {!!card?.comments?.length &&
             <Button size="small" startIcon={<CommentIcon/>}>{card?.comments?.length}</Button>
