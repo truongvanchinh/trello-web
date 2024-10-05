@@ -8,18 +8,17 @@ import { generatePlaceholderCard } from '~/utils/formatters'
 import {
   DndContext,
   KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
   useSensor,
   useSensors,
   DragOverlay,
   defaultDropAnimationSideEffects,
   closestCorners,
-  closestCenter,
+  // closestCenter,
   pointerWithin,
-  rectIntersection,
+  // rectIntersection,
   getFirstCollision
 } from '@dnd-kit/core'
+import { MouseSensor, TouchSensor } from '~/customLibraries/DndKitSensor'
 import { arrayMove } from '@dnd-kit/sortable'
 import { cloneDeep, isEmpty } from 'lodash'
 
@@ -86,7 +85,7 @@ function BoardContent({ board }) {
       if (nextActiveColumn) {
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
         if (isEmpty(nextActiveColumn.cards)) {
-          console.log('Card cuoi dc keo di')
+          // console.log('Card cuoi dc keo di')
           nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
         }
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
@@ -103,7 +102,7 @@ function BoardContent({ board }) {
 
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
-      console.log('Next column', nextColumns)
+      // console.log('Next column', nextColumns)
       return nextColumns
     })
   }
