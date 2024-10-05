@@ -17,7 +17,7 @@ import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import { mapOrder } from '~/utils/sorts'
-
+import { toast } from 'react-toastify'
 import ListCards from './ListCards/ListCards'
 
 import { useSortable } from '@dnd-kit/sortable'
@@ -52,7 +52,14 @@ function Column({ column }) {
 
   const toggleNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
   const addNewCard = () => {
-    if (!newCardTitle) return
+    if (!newCardTitle) {
+      toast.error('Please enter card title!', {
+        position: 'bottom-right',
+        theme: 'colored',
+        autoClose: 2000
+      })
+      return
+    }
 
     //Gọi API ở dưới
 
