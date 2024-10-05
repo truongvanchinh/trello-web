@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close'
+import { toast } from 'react-toastify'
 
 
 function ListColumns({ columns }) {
@@ -15,7 +16,14 @@ function ListColumns({ columns }) {
 
   const toggleNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const addNewColumn = () => {
-    if (!newColumnTitle) return
+    if (!newColumnTitle) {
+      toast.error('Please enter column title!', {
+        position: 'bottom-left',
+        theme: 'colored',
+        autoClose: 2000
+      })
+      return
+    }
 
     //Gọi API ở dưới
 
