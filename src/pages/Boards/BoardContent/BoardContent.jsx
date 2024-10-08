@@ -26,7 +26,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'drag_card'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
   const [orderedColumns, setOrderedColumns] = useState([])
   const [activeItemId, setActiveItemId] = useState(null)
   const [activeItemType, setActiveItemType] = useState(null)
@@ -189,8 +189,8 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
       const oldIndex = orderedColumns.findIndex(c => c._id === active.id)
       const newIndex = orderedColumns.findIndex(c => c._id === over.id)
       const dndOrderedColumns = arrayMove(orderedColumns, oldIndex, newIndex)
-      // const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
-      // console.log(dndOrderedColumnsIds)
+
+      moveColumn(dndOrderedColumns)
       setOrderedColumns(dndOrderedColumns)
     }
     setActiveItemId(null)
@@ -239,7 +239,6 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
-
     >
       <Box sx={{
         bgcolor: (theme) => (theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),
