@@ -5,6 +5,11 @@ export const fetchBoardDetailsAPI = async (boardId) => {
   return response.data
 }
 
+export const updateBoardDetailsAPI = async (boardId, updateData) => {
+  const response = await axios.put(`${API_ROOT}/v1/boards/${boardId}`, updateData)
+  return response.data
+}
+
 export const createNewColumnAPI = async (newColumnData) => {
   const req = await axios.post(`${API_ROOT}/v1/columns`, newColumnData)
   const response = await axios.get(`${API_ROOT}/v1/columns/${req.data.insertedId}`)
@@ -16,5 +21,7 @@ export const createNewCardAPI = async (newCardData) => {
   const response = await axios.get(`${API_ROOT}/v1/cards/${req.data.insertedId}`)
   return response.data
 }
+
+
 
 //học thêm về Interceptors
