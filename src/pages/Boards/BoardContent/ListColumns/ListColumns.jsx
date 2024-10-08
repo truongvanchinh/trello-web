@@ -9,13 +9,13 @@ import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
 
 
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
 
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
   const toggleNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter column title!', {
         position: 'bottom-left',
@@ -25,7 +25,12 @@ function ListColumns({ columns }) {
       return
     }
 
+    //Tạo dữ liệu Column để gọi api
+    const newColumnData = {
+      title: newColumnTitle
+    }
     //Gọi API ở dưới
+    await createNewColumn(newColumnData)
 
     //Đóng add column, reset giá trị ban đầu
     toggleNewColumnForm()
@@ -43,7 +48,7 @@ function ListColumns({ columns }) {
         overflowY: 'hidden',
         '&::-webkit-scrollbar-track' : { m: 2 }
       }}>
-        {columns?.map(column => <Column key={column._id} column={column}/>)}
+        {columns?.map(column => <Column key={column._id} column={column} createNewCard={createNewCard}/>)}
         {/* Box add new list */}
         {!openNewColumnForm
           ? <Box

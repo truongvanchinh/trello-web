@@ -7,7 +7,6 @@ import { mapOrder } from '~/utils/sorts'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import {
   DndContext,
-  KeyboardSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -27,7 +26,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'drag_card'
 }
 
-function BoardContent({ board }) {
+function BoardContent({ board, createNewColumn, createNewCard }) {
   const [orderedColumns, setOrderedColumns] = useState([])
   const [activeItemId, setActiveItemId] = useState(null)
   const [activeItemType, setActiveItemType] = useState(null)
@@ -47,9 +46,8 @@ function BoardContent({ board }) {
       tolerance: 50
     }
   })
-  const keyboardSensor = useSensor(KeyboardSensor)
 
-  const sensors = useSensors( mouseSensor, touchSensor, keyboardSensor )
+  const sensors = useSensors( mouseSensor, touchSensor )
 
   useEffect(() => {
     setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
@@ -249,7 +247,7 @@ function BoardContent({ board }) {
         height: (theme) => theme.trello.boardContentHeight,
         p: '8px 0'
       }}>
-        <ListColumns columns={orderedColumns}/>
+        <ListColumns columns={orderedColumns} createNewColumn={createNewColumn} createNewCard={createNewCard}/>
         <DragOverlay dropAnimation={dropAnimation}>
           {/* {!activeItemType && null} */}
           {(activeItemId && activeItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) &&
