@@ -23,7 +23,7 @@ import ListCards from './ListCards/ListCards'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-function Column({ column }) {
+function Column({ column, createNewCard }) {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
   const [anchorEl, setAnchorEl] = useState(null)
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
@@ -51,7 +51,7 @@ function Column({ column }) {
   }
 
   const toggleNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
       toast.error('Please enter card title!', {
         position: 'bottom-right',
@@ -61,8 +61,13 @@ function Column({ column }) {
       return
     }
 
+    // Tạo data cho card để gọi api
+    const newCardData = {
+      title: newCardTitle,
+      columnId: column._id
+    }
     //Gọi API ở dưới
-
+    await createNewCard(newCardData)
     //Đóng add Card, reset giá trị ban đầu
     toggleNewCardForm()
     setNewCardTitle('')
