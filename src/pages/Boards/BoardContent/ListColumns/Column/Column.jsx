@@ -16,7 +16,6 @@ import AddIcon from '@mui/icons-material/Add'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
-import { mapOrder } from '~/utils/sorts'
 import { toast } from 'react-toastify'
 import ListCards from './ListCards/ListCards'
 
@@ -24,7 +23,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
 function Column({ column, createNewCard }) {
-  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+  const orderedCards = column.cards
   const [anchorEl, setAnchorEl] = useState(null)
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const [newCardTitle, setNewCardTitle] = useState('')
@@ -51,7 +50,7 @@ function Column({ column, createNewCard }) {
   }
 
   const toggleNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
-  const addNewCard = async () => {
+  const addNewCard = () => {
     if (!newCardTitle) {
       toast.error('Please enter card title!', {
         position: 'bottom-right',
@@ -67,7 +66,7 @@ function Column({ column, createNewCard }) {
       columnId: column._id
     }
     //Gọi API ở dưới
-    await createNewCard(newCardData)
+    createNewCard(newCardData)
     //Đóng add Card, reset giá trị ban đầu
     toggleNewCardForm()
     setNewCardTitle('')
