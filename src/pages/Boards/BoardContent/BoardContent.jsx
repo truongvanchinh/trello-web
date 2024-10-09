@@ -3,7 +3,6 @@ import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
-import { mapOrder } from '~/utils/sorts'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import {
   DndContext,
@@ -26,7 +25,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'drag_card'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumn, moveCardInTheSameColumn }) {
   const [orderedColumns, setOrderedColumns] = useState([])
   const [activeItemId, setActiveItemId] = useState(null)
   const [activeItemType, setActiveItemType] = useState(null)
@@ -50,7 +49,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
   const sensors = useSensors( mouseSensor, touchSensor )
 
   useEffect(() => {
-    setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
+    setOrderedColumns(board.columns)
   }, [board])
 
   const findColumnByCardId = (cardId) => {
@@ -174,13 +173,16 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumn }) {
         const newCardIndex = overColumn?.cards?.findIndex(card => card._id === overCardId)
 
         const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex)
+        const dndOrderedCardsIds = dndOrderedCards.map(card => card._id)
         setOrderedColumns(prevColumns => {
           const nextColumns = cloneDeep(prevColumns)
           const targetColumn = nextColumns.find(column => column._id === overColumn._id)
           targetColumn.cards = dndOrderedCards
-          targetColumn.cardOrderIds = dndOrderedCards.map(card => card._id)
+          targetColumn.cardOrderIds = dndOrderedCardsIds
           return nextColumns
         })
+
+        moveCardInTheSameColumn(dndOrderedCards, dndOrderedCardsIds, oldColumnWhenDraggingCard._id)
       }
 
     }
