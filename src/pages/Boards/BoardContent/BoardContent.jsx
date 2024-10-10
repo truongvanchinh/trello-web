@@ -25,7 +25,14 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'drag_card'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard, moveColumn, moveCardInTheSameColumn }) {
+function BoardContent({
+  board,
+  createNewColumn,
+  createNewCard,
+  moveColumn,
+  moveCardInTheSameColumn,
+  moveCardToDifferentColumn
+}) {
   const [orderedColumns, setOrderedColumns] = useState([])
   const [activeItemId, setActiveItemId] = useState(null)
   const [activeItemType, setActiveItemType] = useState(null)
@@ -63,7 +70,8 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumn, moveC
     over,
     activeColumn,
     activeDraggingCardId,
-    activeDraggingCardData
+    activeDraggingCardData,
+    triggerFrom
   ) => {
     setOrderedColumns(prevColumns => {
       const overCardIndex = overColumn?.cards?.findIndex(card => card._id === overCardId)
@@ -99,7 +107,14 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumn, moveC
 
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
-      // console.log('Next column', nextColumns)
+      if (triggerFrom === 'handleDragEnd') {
+        moveCardToDifferentColumn(
+          activeDraggingCardId,
+          oldColumnWhenDraggingCard._id,
+          nextOverColumn._id,
+          nextColumns
+        )
+      }
       return nextColumns
     })
   }
@@ -137,7 +152,8 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumn, moveC
         over,
         activeColumn,
         activeDraggingCardId,
-        activeDraggingCardData
+        activeDraggingCardData,
+        'handleDragOver'
       )
     }
   }
@@ -165,7 +181,8 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumn, moveC
           over,
           activeColumn,
           activeDraggingCardId,
-          activeDraggingCardData
+          activeDraggingCardData,
+          'handleDragEnd'
         )
       } else {
         // cung column
