@@ -66,8 +66,15 @@ function Board() {
     const newBoard = { ...board }
     const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
     if (columnToUpdate) {
-      columnToUpdate.cards.push(createdCard)
-      columnToUpdate.cardOrderIds.push(createdCard._id)
+      if (columnToUpdate.cards.some(card => card.FE_PlaceholderCard)) {
+        // chưa có thì gán luôn -> loại bỏ card placeholder mặc định
+        columnToUpdate.cards = [createdCard]
+        columnToUpdate.cardOrderIds = [createdCard._id]
+      } else {
+        // Đã có data thì push thêm vào mảng
+        columnToUpdate.cards.push(createdCard)
+        columnToUpdate.cardOrderIds.push(createdCard._id)
+      }
     }
     setBoard(newBoard)
   }
@@ -114,10 +121,12 @@ function Board() {
     setBoard(newBoard)
 
     //gọi API cập nhật data (BE)
+    let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+    if (prevCardOrderIds[0].includes('placeholder-card')) prevCardOrderIds = []
     moveCardToDifferentColumnAPI({
       currentCardId,
       prevColumnId,
-      prevCardOrderIds: dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds,
+      prevCardOrderIds,
       nextColumnId,
       nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds
     })
