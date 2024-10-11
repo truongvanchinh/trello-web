@@ -19,8 +19,8 @@ export const moveCardToDifferentColumnAPI = async (updateData) => {
 }
 
 export const createNewColumnAPI = async (newColumnData) => {
-  const req = await axios.post(`${API_ROOT}/v1/columns`, newColumnData)
-  const response = await axios.get(`${API_ROOT}/v1/columns/${req.data.insertedId}`)
+  const response = await axios.post(`${API_ROOT}/v1/columns`, newColumnData)
+  // const response = await axios.get(`${API_ROOT}/v1/columns/${req.data.insertedId}`)
   return response.data
 }
 
@@ -36,8 +36,8 @@ export const deleteColumnDetailsAPI = async (columnId) => {
 
 //TODO: Card
 export const createNewCardAPI = async (newCardData) => {
-  const req = await axios.post(`${API_ROOT}/v1/cards`, newCardData)
-  const response = await axios.get(`${API_ROOT}/v1/cards/${req.data.insertedId}`)
+  const response = await axios.post(`${API_ROOT}/v1/cards`, newCardData)
+  // const response = await axios.get(`${API_ROOT}/v1/cards/${req.data.insertedId}`)
   return response.data
 }
 
