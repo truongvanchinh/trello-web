@@ -31,7 +31,8 @@ function BoardContent({
   createNewCard,
   moveColumn,
   moveCardInTheSameColumn,
-  moveCardToDifferentColumn
+  moveCardToDifferentColumn,
+  deleteColumnDetails
 }) {
   const [orderedColumns, setOrderedColumns] = useState([])
   const [activeItemId, setActiveItemId] = useState(null)
@@ -265,7 +266,12 @@ function BoardContent({
         height: (theme) => theme.trello.boardContentHeight,
         p: '8px 0'
       }}>
-        <ListColumns columns={orderedColumns} createNewColumn={createNewColumn} createNewCard={createNewCard}/>
+        <ListColumns
+          columns={orderedColumns}
+          createNewColumn={createNewColumn}
+          createNewCard={createNewCard}
+          deleteColumnDetails={deleteColumnDetails}
+        />
         <DragOverlay dropAnimation={dropAnimation}>
           {/* {!activeItemType && null} */}
           {(activeItemId && activeItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) &&
