@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client'
-import App from '~/App.jsx'
 import CssBaseline from '@mui/material/CssBaseline'
+import App from '~/App.jsx'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 import theme from '~/theme'
 
@@ -15,6 +15,19 @@ import { ConfirmProvider } from 'material-ui-confirm'
 import { Provider } from 'react-redux'
 import store from '~/redux/store'
 
+// React Router Dom
+import {
+  createBrowserRouter,
+  RouterProvider
+} from 'react-router-dom'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />
+  }
+])
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
   <Provider store={store}>
@@ -27,7 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         buttonOrder: ['confirm', 'cancel']
       }}>
         <CssBaseline />
-        <App />
+        <RouterProvider router={router}/>
         <ToastContainer />
       </ConfirmProvider>
     </CssVarsProvider>

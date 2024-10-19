@@ -1,6 +1,5 @@
-import Board from '~/pages/Boards/_id'
+// import Board from '~/pages/Boards/_id'
 import Auth from './pages/Auth/_id'
-
 
 function App() {
   return (
@@ -12,6 +11,5 @@ function App() {
     </>
   )
 }
-
 
 export default App
