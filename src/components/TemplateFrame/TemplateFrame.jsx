@@ -19,9 +19,7 @@ function TemplateFrame({
 }
 
 TemplateFrame.propTypes = {
-  children: PropTypes.node,
-  showCustomTheme: PropTypes.bool.isRequired,
-  toggleCustomTheme: PropTypes.func.isRequired
+  children: PropTypes.node
 }
 
 export default TemplateFrame
