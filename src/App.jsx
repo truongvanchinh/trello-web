@@ -1,4 +1,5 @@
 import Board from '~/pages/Boards/_id'
+import Auth from './pages/Auth/_id'
 
 
 function App() {
@@ -6,7 +7,8 @@ function App() {
     <>
       {/* React router dom /boards /boards/123 */}
       {/* Board Detail */}
-      <Board />
+      {/* <Board /> */}
+      <Auth/>
     </>
   )
 }
