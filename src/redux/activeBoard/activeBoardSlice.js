@@ -46,12 +46,11 @@ export const activeBoardlice = createSlice({
     }
   },
   // ExtraReducers: Nơi xử lý dữ liệu bất đồng bộ
-  extraReducer: (builder) => {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchBoardDetailsAPI.fulfilled, (state, action) => {
         //action.payload ở đây chính là cái response.data trả về ở trên
         let board = action.payload
-
         // Xử lý dữ liệu nều cần thiết...
         // Sắp xếp thứ tự các column luôn ở đây trước khi đưa dữ liệu xuồng bên
         // dưới các component con (video 71 đã giải thích lý do ở phần Fix bug quan trọng)
