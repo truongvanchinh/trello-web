@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import authReducer from '~/redux/authSlice'
-const store = configureStore({
+import { activeBoardReducer } from '~/redux/activeBoard/activeBoardSlice'
+
+export const store = configureStore({
   reducer: {
-    auth: authReducer
+    activeBoard: activeBoardReducer
   }
 })
-export default store
