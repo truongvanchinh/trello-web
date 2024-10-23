@@ -4,7 +4,6 @@ import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { useEffect, useState } from 'react'
 import {
-  fetchBoardDetailsAPI,
   createNewCardAPI,
   createNewColumnAPI,
   updateBoardDetailsAPI,
@@ -13,41 +12,31 @@ import {
   deleteColumnDetailsAPI
 } from '~/apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
-import { isEmpty } from 'lodash'
+import { cloneDeep } from 'lodash'
 import { mapOrder } from '~/utils/sorts'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { CircularProgress } from '@mui/material'
 import { toast } from 'react-toastify'
 
+import {
+  fetchBoardDetailsAPI,
+  updateCurrentActiveBoard,
+  selectCurrentActiveBoard
+} from '~/redux/activeBoard/activeBoardSlice'
+import { useDispatch, useSelector } from 'react-redux'
+
 function Board() {
-  const [board, setBoard] = useState(null)
+  const dispatch = useDispatch()
+  // const [board, setBoard] = useState(null)
+  const board = useSelector(selectCurrentActiveBoard)
 
   useEffect(() => {
     const boardId = '670247dbaceb5f086b41a889' // use react-router-dom
     //call API
-    fetchBoardDetailsAPI(boardId)
-      .then(board => {
-        // Sắp xếp thứ tự các column luôn ở đây trước khi đưa dữ liệu xuồng bên
-        // dưới các component con (video 71 đã giải thích lý do ở phần Fix bug quan trọng)
-        board.columns = mapOrder(board?.columns, board?.columnOrderIds, '_id')
-
-        board.columns.forEach(column => {
-          // Khi 15 trang web thì cần xử lý vấn đề kéo thả vào một column rỗng
-          // (Nhớ lại video 37.2, code hiện tại là video 69)
-          if (isEmpty(column.cards)) {
-            column.cards = [generatePlaceholderCard(column)]
-            column.cardOrderIds = [generatePlaceholderCard(column._id)]
-          } else {
-            // Sắp xếp thứ tự các cards luôn ở đây trước khi đưa dữ liệu xuống bên dưới
-            // các component con (video 71 đã giải thích lý do ở phần Fix bug quan trọng)
-            column.cards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
-          }
-        })
-
-        setBoard(board)
-      })
-  }, [])
+    //* fetchBoardDetailsAPI(boardId) là Middleware của board trong redux toolkit
+    dispatch(fetchBoardDetailsAPI(boardId))
+  }, [dispatch])
 
   const createNewColumn = async (newColumnData) => {
     const createdColumn = await createNewColumnAPI({
@@ -57,11 +46,27 @@ function Board() {
     createdColumn.cards = [generatePlaceholderCard(createdColumn)]
     createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn._id)]
 
-    const newBoard = { ...board }
+    //TODO - lesson 2
+    //* Đoạn này sẽ dính lỗi object is not extensible bởi dù đã copy/clone ra giá trị newBoard
+    //* nhưng bản chất của spread operator là Shallow Copy/Clone,
+    //* nên dính phải rules Immutability trong Redux Toolkit không dùng được hàm PUSH (sửa giá trị mảng trực tiếp),
+    //? cách đơn giản nhanh gọn nhất ở trường hợp này của chúng ta là dùng tới Deep Copy/Clone toàn bộ cái Board
+    //* cho dễ hiều và code ngắn gọn.
+    //* https://redux-toolkit.js.org/usage/immer-reducers
+    //* Tài Liệu thêm về Shallow và Deep Copy Object trong JS:
+    //* https://www.javascripttutorial.net/object/3-ways-to-copy-objects-in-javascript/
+
+    //? c1: dùng cloneDeep
+    const newBoard = cloneDeep(board)
     newBoard.columns.push(createdColumn)
     newBoard.columnOrderIds.push(createdColumn._id)
 
-    setBoard(newBoard)
+    //? c2: dùng concat -> vì nó sẽ tạo ra mảng mới
+    // const newBoard = { ...board }
+    // newBoard.columns = newBoard.columns.concat([createdColumn])
+    // newBoard.columnOrderIds = newBoard.columnOrderIds.concat([createdColumn])
+    // setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
   }
 
   const createNewCard = async (newCardData) => {
@@ -70,7 +75,10 @@ function Board() {
       boardId: board._id
     })
     // console.log('createdCard: ', createdCard)
-    const newBoard = { ...board }
+
+    // const newBoard = { ...board }
+    const newBoard = cloneDeep(board)
+
     const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
     if (columnToUpdate) {
       if (columnToUpdate.cards.some(card => card.FE_PlaceholderCard)) {
@@ -83,17 +91,24 @@ function Board() {
         columnToUpdate.cardOrderIds.push(createdCard._id)
       }
     }
-    setBoard(newBoard)
+    // setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
   }
 
   //gọi api khi kéo thả column xong
   const moveColumn = async (dndOrderedColumns) => {
     const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
 
+    /* Trường hợp dùng Spread Operator này thì lại không sao bởi vì ở đây
+    chúng ta không dùng push như ở trên Làm thay đổi trực tiếp kiều mở rộng màng,
+    mà chỉ đang gán lại toàn bộ giá trị columns và columnOrderIds bằng 2 mảng mày.
+    Tương tự như cách làm concat ở trường hợp createNewColumn thôi - lesson 2
+    */
     const newBoard = { ...board }
     newBoard.columns = dndOrderedColumns
     newBoard.columnOrderIds = dndOrderedColumnsIds
-    setBoard(newBoard)
+    // setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     //gọi api update board
     await updateBoardDetailsAPI(newBoard._id, {
@@ -103,14 +118,18 @@ function Board() {
 
   //gọi api khi kéo thả column xong
   const moveCardInTheSameColumn = (dndOrderedCards, dndOrderedCardsIds, columnId) => {
-
-    const newBoard = { ...board }
+    /*Cannot assign to read only property cards' of object
+    * Trường hợp Immutability ở đây đã đụng tới giá trị cards đang được coi là chỉ đọc read only
+    (nested object - can thiệp sâu dữ Liệu)
+    */
+    const newBoard = cloneDeep(board)
     const columnToUpdate = newBoard.columns.find(column => column._id === columnId)
     if (columnToUpdate) {
       columnToUpdate.cards= dndOrderedCards
       columnToUpdate.cardOrderIds = dndOrderedCardsIds
     }
-    setBoard(newBoard)
+    // setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     //gọi api update board
     updateColumnDetailsAPI(columnId, {
@@ -122,10 +141,12 @@ function Board() {
   const moveCardToDifferentColumn = (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
 
     const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
+
     const newBoard = { ...board }
     newBoard.columns = dndOrderedColumns
     newBoard.columnOrderIds = dndOrderedColumnsIds
-    setBoard(newBoard)
+    // setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     //gọi API cập nhật data (BE)
     let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
@@ -144,7 +165,8 @@ function Board() {
     const newBoard = { ...board }
     newBoard.columns = newBoard.columns.filter(column => column._id !== columnId)
     newBoard.columnOrderIds = newBoard.columnOrderIds.map(_id => _id !== columnId)
-    setBoard(newBoard)
+    // setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     //Gọi API xử lý xóa column and cards
     deleteColumnDetailsAPI(columnId).then(res => {
