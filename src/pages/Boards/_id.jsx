@@ -28,17 +28,23 @@ function Board() {
     //call API
     fetchBoardDetailsAPI(boardId)
       .then(board => {
-
+        // Sắp xếp thứ tự các column luôn ở đây trước khi đưa dữ liệu xuồng bên
+        // dưới các component con (video 71 đã giải thích lý do ở phần Fix bug quan trọng)
         board.columns = mapOrder(board?.columns, board?.columnOrderIds, '_id')
 
         board.columns.forEach(column => {
+          // Khi 15 trang web thì cần xử lý vấn đề kéo thả vào một column rỗng
+          // (Nhớ lại video 37.2, code hiện tại là video 69)
           if (isEmpty(column.cards)) {
             column.cards = [generatePlaceholderCard(column)]
             column.cardOrderIds = [generatePlaceholderCard(column._id)]
           } else {
+            // Sắp xếp thứ tự các cards luôn ở đây trước khi đưa dữ liệu xuống bên dưới
+            // các component con (video 71 đã giải thích lý do ở phần Fix bug quan trọng)
             column.cards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
           }
         })
+
         setBoard(board)
       })
   }, [])
