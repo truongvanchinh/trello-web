@@ -19,6 +19,7 @@ import {
   selectCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 function Board() {
   const dispatch = useDispatch()
@@ -26,12 +27,14 @@ function Board() {
   // const [board, setBoard] = useState(null)
   const board = useSelector(selectCurrentActiveBoard)
 
-  useEffect(() => {
-    const boardId = '670247dbaceb5f086b41a889' // use react-router-dom
-    //call API
+  // boardId là khi bên App.jsx sau dấu : của prop path
+  const { boardId } = useParams()
+
+  useEffect(() => { // use react-router-dom
+    //call API ...... 670247dbaceb5f086b41a889
     //* fetchBoardDetailsAPI(boardId) là Middleware của board trong redux toolkit
     dispatch(fetchBoardDetailsAPI(boardId))
-  }, [dispatch])
+  }, [dispatch, boardId])
 
 
   //gọi api khi kéo thả column xong
