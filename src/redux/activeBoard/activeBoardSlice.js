@@ -36,8 +36,9 @@ export const activeBoardlice = createSlice({
       // action.payload là chuẩn đặt tên nhận dữ liệu vào reducer, ở đây chúng ta gần nó ra một biến có nghĩa hơn
       const board = action.payload
 
-      // Xử lý dữ liệu nều cần thiết
+      //* Xử lý dữ liệu nều cần thiết...Tùy vào đặc thù dự án -------------------------
       // ...
+      //* -------------------------
 
       // Update lại dữ liệu của cái currentActiveBoard
       state.currentActiveBoard = board
@@ -51,7 +52,8 @@ export const activeBoardlice = createSlice({
       .addCase(fetchBoardDetailsAPI.fulfilled, (state, action) => {
         //action.payload ở đây chính là cái response.data trả về ở trên
         let board = action.payload
-        // Xử lý dữ liệu nều cần thiết...
+
+        //* Xử lý dữ liệu nều cần thiết...Tùy vào đặc thù dự án -------------------------
         // Sắp xếp thứ tự các column luôn ở đây trước khi đưa dữ liệu xuồng bên
         // dưới các component con (video 71 đã giải thích lý do ở phần Fix bug quan trọng)
         board.columns = mapOrder(board?.columns, board?.columnOrderIds, '_id')
@@ -68,6 +70,7 @@ export const activeBoardlice = createSlice({
             column.cards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
           }
         })
+        //* -------------------------------------------------------
 
         // Update lại dữ liệu của cải currentActiveBoard
         state.currentActiveBoard = board
