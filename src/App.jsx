@@ -1,14 +1,31 @@
 import Board from '~/pages/Boards/_id'
-// import Auth from './pages/Auth/_id'
-
+import { Routes, Route, Navigate } from 'react-router-dom'
 function App() {
   return (
-    <>
-      {/* React router dom /boards /boards/123 */}
+    <Routes>
+      {/* Redirect Route */}
+      <Route path='/' element={
+        // ở đây cần replace giá trị true đề nó thay thế route /,
+        // có thể hiểu là route / sẽ không còn nằm trong history của Browser
+        // Thực hành dễ hiều hơn bằng cách nhẫn Go Home từ trang 404
+        // xong thứ quay lại bằng nút back của trình duyệt giữa 2 trường hợp có replace hoặc không có.
+        //* Ví Dụ thực tế:
+        //? đang ở /abd (404 Page Not Found) -> click Go home (/) -> /board/:boardId -> click go back ->
+        //? trở về trang (/), mà / thì lại navigate lại /board/:boardId, mà 0 phải /abd (404 Page Not Found)
+        //? dùng replace={true} để thay cái / thành /board/:boardId -> back là trở về trang /abd (404 Page Not Found)
+
+        <Navigate to='/boards/670247dbaceb5f086b41a889' replace={true}/>
+      }/>
       {/* Board Detail */}
-      <Board />
-      {/* <Auth/> */}
-    </>
+      <Route path='/boards/:boardId' element={<Board />} />
+
+      {/* Authentication Route */}
+      <Route path='/login' element={<div>Login Page</div>} />
+      <Route path='/register' element={<div>Register Page</div>} />
+
+      {/* 404 Route Not Found */}
+      <Route path='*' element={<div>404 Page Not Found</div>} />
+    </Routes>
   )
 }
 
