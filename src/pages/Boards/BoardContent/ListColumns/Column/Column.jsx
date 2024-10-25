@@ -127,8 +127,8 @@ function Column({ column }) {
       .then(() => {
         // Begin: Gọi API xóa Column và cập nhật dữ liệu State Board ------------ lesson 2: refactor
         // update chuẩn dữ liệu state Board
-        const newBoard = { ...board }
-        newBoard.columns = newBoard.columns.filter(column => column._id !== column._id)
+        const newBoard = cloneDeep(board)
+        newBoard.columns = newBoard.columns.filter(c => c._id !== column._id)
         newBoard.columnOrderIds = newBoard.columnOrderIds.map(_id => _id !== column._id)
         // setBoard(newBoard)
         dispatch(updateCurrentActiveBoard(newBoard))
@@ -298,6 +298,7 @@ function Column({ column }) {
               />
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Button
+                  className='interceptor-loading'
                   data-no-dnd="true"
                   onClick={addNewCard}
                   variant='contained' color='success' size='small'
