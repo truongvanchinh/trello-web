@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom/client'
 import CssBaseline from '@mui/material/CssBaseline'
+import GlobalStyles from '@mui/material/GlobalStyles'
 import App from '~/App.jsx'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 import theme from '~/theme'
@@ -31,6 +32,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter basename='/'>
     <Provider store={store}>
       <PersistGate persistor={persistor}>
+        <GlobalStyles styles={{ a: { textDecoration: 'none' } }}/>
         <CssVarsProvider theme={theme}>
           <ConfirmProvider defaultOptions={{
             allowClose: false,
