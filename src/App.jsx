@@ -36,7 +36,7 @@ function App() {
         //? trở về trang (/), mà / thì lại navigate lại /board/:boardId, mà 0 phải /abd (404 Page Not Found)
         //? dùng replace={true} để thay cái / thành /board/:boardId -> back là trở về trang /abd (404 Page Not Found)
 
-        <Navigate to='/boards/670247dbaceb5f086b41a889' replace={true}/>
+        <Navigate to='/boards' replace={true}/>
       }/>
       {/*-Protected Routes (Hiều đơn giản trong dự án của chúng ta là những route chỉ cho truy cập sau khi đã login) */}
       <Route element={<ProtectedRoute user={currentUser}/>}>
