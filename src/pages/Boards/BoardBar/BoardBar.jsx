@@ -7,10 +7,10 @@ import VpnLockIcon from '@mui/icons-material/VpnLock'
 import AddToDriveIcon from '@mui/icons-material/AddToDrive'
 import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
-import Avatar from '@mui/material/Avatar'
-import AvatarGroup from '@mui/material/AvatarGroup'
+
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
+import BoardUserGroup from './BoardUserGroup' // lesson 14
 
 const MENU_STYLES = {
   color: 'white',
@@ -90,41 +90,8 @@ function BoardBar({ board }) {
         >
           Invite
         </Button>
-        <AvatarGroup
-          max={4}
-          total={24}
-          sx={{
-            gap: '10px',
-            '& .MuiAvatar-root':{
-              width: 34,
-              height: 34,
-              fontSize: 16,
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              '&:first-of-type': { bgcolor: '#a4b0be' }
-            }
-          }}
-        >
-          <Tooltip title='Remy Sharp'>
-            <Avatar alt="Remy Sharp" src="https://yt3.ggpht.com/0xsjFzKuqCBY9LAMrsgHqFLoA3oiiMTGzNrY3rzdxhIK5p21M094IkXDhEsSL4odGFJeKEZLWQ=s88-c-k-c0x00ffffff-no-rj" />
-          </Tooltip>
-          <Tooltip title='Remy Sharp'>
-            <Avatar alt="Remy Sharp" src="https://yt3.ggpht.com/0xsjFzKuqCBY9LAMrsgHqFLoA3oiiMTGzNrY3rzdxhIK5p21M094IkXDhEsSL4odGFJeKEZLWQ=s88-c-k-c0x00ffffff-no-rj" />
-          </Tooltip>
-          <Tooltip title='Remy Sharp'>
-            <Avatar alt="Remy Sharp" src="https://yt3.ggpht.com/0xsjFzKuqCBY9LAMrsgHqFLoA3oiiMTGzNrY3rzdxhIK5p21M094IkXDhEsSL4odGFJeKEZLWQ=s88-c-k-c0x00ffffff-no-rj" />
-          </Tooltip>
-          <Tooltip title='Remy Sharp'>
-            <Avatar alt="Remy Sharp" src="https://yt3.ggpht.com/0xsjFzKuqCBY9LAMrsgHqFLoA3oiiMTGzNrY3rzdxhIK5p21M094IkXDhEsSL4odGFJeKEZLWQ=s88-c-k-c0x00ffffff-no-rj" />
-          </Tooltip>
-          <Tooltip title='Remy Sharp'>
-            <Avatar alt="Remy Sharp" src="https://yt3.ggpht.com/0xsjFzKuqCBY9LAMrsgHqFLoA3oiiMTGzNrY3rzdxhIK5p21M094IkXDhEsSL4odGFJeKEZLWQ=s88-c-k-c0x00ffffff-no-rj" />
-          </Tooltip>
-          <Tooltip title='Remy Sharp'>
-            <Avatar alt="Remy Sharp" src="https://yt3.ggpht.com/0xsjFzKuqCBY9LAMrsgHqFLoA3oiiMTGzNrY3rzdxhIK5p21M094IkXDhEsSL4odGFJeKEZLWQ=s88-c-k-c0x00ffffff-no-rj" />
-          </Tooltip>
-        </AvatarGroup>
+        {/* Xử lý hiển thị ds thành viên của Board */}
+        <BoardUserGroup />
       </Box>
     </Box>
   )

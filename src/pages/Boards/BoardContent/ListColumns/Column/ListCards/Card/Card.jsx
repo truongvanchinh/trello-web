@@ -11,7 +11,11 @@ import AttachmentIcon from '@mui/icons-material/Attachment'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
+import { useDispatch } from 'react-redux' //lesson 14
+import { updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice' //lesson 14
 function Card({ card }) {
+  const dispatch = useDispatch()
+
   const shouldShowCardAction = () => {
     return !!card?.memberIds?.length ||
            !!card?.comments?.length ||
@@ -28,9 +32,14 @@ function Card({ card }) {
     border: isDragging ? '1px solid #2ecc71': undefined
   }
 
+  const setActiveCard = () => {
+    // Cập nhật data cho cái ActiveCard trong Redux
+    dispatch(updateCurrentActiveCard(card))
+  }
 
   return (
     <MuiCard
+      onClick={setActiveCard}
       ref={setNodeRef}
       style={dndKitCardStyles}
       {...attributes}
