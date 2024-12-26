@@ -60,7 +60,7 @@ function Card({ card }) {
       {card?.cover &&
       <CardMedia
         sx={{ height: 140 }}
-        image="https://mui.com/static/images/cards/paella.jpg"
+        image={card?.cover}
         title="green iguana"
       />
       }
