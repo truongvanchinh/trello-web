@@ -36,6 +36,7 @@ import CardActivitySection from './CardActivitySection'
 import { styled } from '@mui/material/styles'
 import { useDispatch, useSelector } from 'react-redux'
 import { clearCurrentActiveCard, selectCurrentActiveCard, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
+import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { updateCardDetailsAPI } from '~/apis'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
@@ -62,14 +63,14 @@ const SidebarItem = styled(Box)(({ theme }) => ({
  * Note: Modal là một low-component mà bọn MUI sử dụng bên trong những thứ như Dialog, Drawer, Menu, Popover. Ở đây dĩ nhiên chúng ta có thể sử dụng Dialog cũng không thành vấn đề gì, nhưng sẽ sử dụng Modal để dễ linh hoạt tùy biến giao diện từ con số 0 cho phù hợp với mọi nhu cầu nhé.
  */
 function ActiveCard() {
-  const dispath = useDispatch()
+  const dispatch = useDispatch()
   const activeCard = useSelector(selectCurrentActiveCard)
 
   // Không dùng biến state để đóng mở Modal nữa vì chúng ta sẽ check bên Boards/_id.jsx
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
-    dispath(clearCurrentActiveCard())
+    dispatch(clearCurrentActiveCard())
   }
 
   // Function gọi API dùng chung cho các trường hợp update card title, cover, comment,...
@@ -77,10 +78,10 @@ function ActiveCard() {
     const updatedCard = await updateCardDetailsAPI(activeCard._id, updateData)
 
     // B1: Cập nhật lại cái card đang active trong modal hiện tại
-    dispath(updateCurrentActiveCard(updatedCard)) // lesson 14
+    dispatch(updateCurrentActiveCard(updatedCard)) // lesson 14
 
     // B2: Cập nhật lại cái bản ghi card trong cái activeBoard-(nested data)
-    // dispatch(updateCardInBoard(updatedCard)) // lesson 15
+    dispatch(updateCardInBoard(updatedCard)) // lesson 15
     return updatedCard
   }
 
@@ -90,8 +91,15 @@ function ActiveCard() {
     callApiUpdateCard({ title: newTitle.trim() })
   }
 
+  const onUpdateCardDescription = (newDescription) => {
+    // console.log(newTitle.trim())
+    // Gọi API...
+    callApiUpdateCard({ description: newDescription })
+  }
+
+
   const onUploadCardCover = (event) => {
-    console.log(event.target?.files[0])
+    // console.log(event.target?.files[0])
     const error = singleFileValidator(event.target?.files[0])
     if (error) {
       toast.error(error)
@@ -101,6 +109,10 @@ function ActiveCard() {
     reqData.append('cardCover', event.target?.files[0])
 
     // Gọi API...
+    toast.promise(
+      callApiUpdateCard(reqData).finally(() => event.target.value = ''),
+      { pending: 'Updating...' }
+    )
   }
 
   return (
@@ -167,7 +179,10 @@ function ActiveCard() {
               </Box>
 
               {/* Feature 03: Xử lý mô tả của Card */}
-              <CardDescriptionMdEditor />
+              <CardDescriptionMdEditor
+                cardDescriptionProp = {activeCard?.description}
+                handleUpdateCardDescription = {onUpdateCardDescription}
+              />
             </Box>
 
             <Box sx={{ mb: 3 }}>
