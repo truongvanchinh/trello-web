@@ -11,6 +11,7 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import BoardUserGroup from './BoardUserGroup' // lesson 14
+import InviteBoardUser from './InviteBoardUser' //lesson 16
 
 const MENU_STYLES = {
   color: 'white',
@@ -77,19 +78,9 @@ function BoardBar({ board }) {
 
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap:2 }}>
-        <Button
-          variant="outlined"
-          startIcon={<PersonAddIcon/>}
-          sx={{
-            color: 'white',
-            borderColor: 'white',
-            '&:hover': {
-              borderColor: 'white'
-            }
-          }}
-        >
-          Invite
-        </Button>
+        {/* Xử lý mời user vào Board */}
+        <InviteBoardUser boardId={board._id}/>
+
         {/* Xử lý hiển thị ds thành viên của Board */}
         <BoardUserGroup boardUsers={board?.FE_allUsers}/>
       </Box>
