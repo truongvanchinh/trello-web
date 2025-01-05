@@ -22,6 +22,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { Link } from 'react-router-dom'
+import Notifications from './Notifications/Notifications'
 
 function AppBar() {
   const [searchValue, setSearchValue] = useState('')
@@ -106,14 +107,11 @@ function AppBar() {
 
           }}
         />
-
+        {/* Dark Light System Mode */}
         <ModeSelect />
 
-        <Tooltip title="Notifications">
-          <Badge color="warning" variant="dot" sx={{ cursor: 'pointer' }}>
-            <NotificationsNoneIcon sx={{ color: 'white' }}/>
-          </Badge>
-        </Tooltip>
+        {/* Xử lý hiển thị các thông báo - notification ở đây */}
+        <Notifications />
 
         <Tooltip title="Help">
           <HelpOutlineIcon sx={{ color: 'white', cursor: 'pointer' }}/>
