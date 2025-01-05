@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form'
 import { EMAIL_RULE, FIELD_REQUIRED_MESSAGE, EMAIL_RULE_MESSAGE } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { inviteUserToBoardAPI } from '~/apis' //lesson 16
-import { socketIoInstance } from '~/main'
+import { socketIoInstance } from '~/socket'
 
 function InviteBoardUser({ boardId }) {
   /**
