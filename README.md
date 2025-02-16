@@ -9,7 +9,7 @@ docker -v
 ```
 docker network create app-network
 ```
-
+## BACK-END
 ### Tạo file .env lưu biến MONGODB_URI
 tạo các biến cần thiết theo .env.example
 
@@ -18,7 +18,7 @@ tạo các biến cần thiết theo .env.example
 cd ./trello-api-master
 docker-compose up --build
 ```
-
+## FRONT-END
 ### Run Front-end(trello-web):
 ```
 cd ./trello-web-master
