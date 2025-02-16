@@ -1,26 +1,16 @@
-### Bộ code base để bắt đầu học khóa MERN Stack Pro (HỌC PHẦN FRONT-END: REACTJS - MATERIAL UI - REDUX...vv) - 
-- Playlist hướng dẫn chi tiết từ A-Z: https://www.youtube.com/playlist?list=PLP6tw4Zpj-RJP2-YrhtkWqObMQ-AA4TDy
+## Trang web làm lại Trello (Ứng dụn kéo thả, phân công việc làm)
 
-### Requirements 
-
+### Tạo network:
 ```
-* nodejs = v18.16.0
-* npm = v9.5.1
-* yarn = v1.22.19
-
-* "react": "^18.2.0"
-* "react-dom": "^18.2.0"
-* "@types/react": "^18.0.28"
-* "@types/react-dom": "^18.0.11"
-
-* "vite": "^4.3.2"
-* "@vitejs/plugin-react-swc": "^3.0.0"
-
-* "eslint": "^8.38.0"
-* "eslint-plugin-react": "^7.32.2"
-* "eslint-plugin-react-hooks": "^4.6.0"
-* "eslint-plugin-react-refresh": "^0.3.4"
+docker network create app-network
 ```
 
+### Run Front-end(trello-web):
+```
+docker-compose up --build
+```
 
-//? ngắn gọn -> state.currentActiveBoard = action.payload
+### Run Back-end (trello-api):
+```
+docker-compose up --build
+```
