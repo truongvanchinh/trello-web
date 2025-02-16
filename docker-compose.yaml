@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  trello-web:
+    build: .
+    container_name: trello-web
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://trello-api:8017  # URL API backend (nếu frontend cần kết nối đến backend)
+    networks:
+      - app-network  # Đưa frontend vào mạng app-network (để giao tiếp với backend)
+
+networks:
+  app-network:
+    external: true  # Sử dụng mạng Docker đã tồn tại từ backend

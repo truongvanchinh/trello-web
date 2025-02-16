@@ -7,6 +7,7 @@ function AccountVerification() {
   // Lầy giá trị email và token từ URL
   let [searchParams] = useSearchParams()
   const { email, token } = Object.fromEntries([...searchParams])
+  console.log('searchParams', searchParams)
 
   // Tạo một biến state để biết được là đã verify tài khoản thành công hay chưa
   const [verified, setVerified] = useState(false)
