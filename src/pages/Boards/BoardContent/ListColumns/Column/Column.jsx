@@ -294,6 +294,12 @@ function Column({ column }) {
                 autoFocus
                 value={newCardTitle}
                 onChange={(e) => setNewCardTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    addNewCard()
+                  }
+                }}
                 data-no-dnd="true"
                 sx={{
                   // width: '100%',
