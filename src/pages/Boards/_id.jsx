@@ -20,6 +20,7 @@ import { useParams } from 'react-router-dom'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 
 import ActiveCard from '~/components/Modal/ActiveCard/ActiveCard' //lesson 14
+import { socketIoInstance } from '~/socket'
 
 function Board() {
   const dispatch = useDispatch()
@@ -34,6 +35,14 @@ function Board() {
     //call API ...... 670247dbaceb5f086b41a889
     //* fetchBoardDetailsAPI(boardId) là Middleware của board trong redux toolkit
     dispatch(fetchBoardDetailsAPI(boardId))
+    const onReceiveMemberUpdate = () => {
+      dispatch(fetchBoardDetailsAPI(boardId))
+    }
+
+    socketIoInstance.on('BOARD_MEMBER_UPDATED', onReceiveMemberUpdate)
+    return () => {
+      socketIoInstance.off('BOARD_MEMBER_UPDATED', onReceiveMemberUpdate)
+    }
   }, [dispatch, boardId])
 
 

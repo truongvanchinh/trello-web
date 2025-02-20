@@ -65,13 +65,13 @@ function Notifications() {
         setNewNotification(true)
       }
     }
-
     //Lắng nghe sự kiện real-time có tên là BE_USER_INVITED_TO_BOARD từ phía server gửi về
     socketIoInstance.on('BE_USER_INVITED_TO_BOARD', onReceiveNewInvitation)
 
     return () => {
       //clean up event để ngăn chặn việc bị đăng ký lặp lại event: https://socket.io/how-to/use-with-react#cleanup
       socketIoInstance.off('BE_USER_INVITED_TO_BOARD', onReceiveNewInvitation)
+
     }
   }, [dispatch, currentUser._id])
 
@@ -83,6 +83,10 @@ function Notifications() {
       .then(res => {
         // console.log(res)
         if (res.payload.boardInvitation.status === BOARD_INVITATION_STATUS.ACCEPTED) {
+          socketIoInstance.emit('FE_BOARD_INVITATION_ACCEPTED', {
+            boardId: res.payload.boardInvitation.boardId,
+            members: res.payload.boardInvitation.boardMembers
+          })
           navigate(`/boards/${res.payload.boardInvitation.boardId}`)
         }
       })
@@ -115,7 +119,7 @@ function Notifications() {
         onClose={handleClose}
         MenuListProps={{ 'aria-labelledby': 'basic-button-open-notification' }}
       >
-        {(!notifications || notifications.length === 0) && 
+        {(!notifications || notifications.length === 0) &&
           <MenuItem sx={{ minWidth: 200 }}>You do not have any new notifications.</MenuItem>}
         {notifications?.map((notification, index) =>
           <Box key={index}>
