@@ -39,9 +39,15 @@ function Board() {
       dispatch(fetchBoardDetailsAPI(boardId))
     }
 
+    const onReceiveUpdatedBoard = (updatedBoard) => {
+      dispatch(updateCurrentActiveBoard(updatedBoard))
+    }
+
+    socketIoInstance.on('BE_board_update', onReceiveUpdatedBoard)
     socketIoInstance.on('BOARD_MEMBER_UPDATED', onReceiveMemberUpdate)
     return () => {
       socketIoInstance.off('BOARD_MEMBER_UPDATED', onReceiveMemberUpdate)
+      socketIoInstance.off('BE_board_update', onReceiveUpdatedBoard)
     }
   }, [dispatch, boardId])
 

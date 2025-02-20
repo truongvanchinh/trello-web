@@ -13,6 +13,8 @@ import { combineReducers } from 'redux' // lưu ý chúng ta có sẵn redux tro
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // default là localstorage
 import { notificationsReducer } from './notifications/notificationsSlice'
+import socketMiddleware from './middleware/socketMiddleware'
+import { socketIoInstance } from '~/socket'
 
 // Cấu hình persist
 const rootPersistConfig = {
@@ -35,5 +37,5 @@ const persistedReducer = persistReducer(rootPersistConfig, reducers)
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false })
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(socketMiddleware(socketIoInstance))
 })
