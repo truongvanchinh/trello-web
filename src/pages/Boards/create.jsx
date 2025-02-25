@@ -58,7 +58,8 @@ function SidebarCreateBoardModal({ afterCreateNewBoard }) {
 
 
   const submitCreateNewBoard = (data) => {
-    // const { title, description, type } = data
+    data.title = data.title.trim()
+    data.description = data.description.trim()
     createNewBoardAPI(data).then(() => {
       handleCloseModal()
       afterCreateNewBoard()

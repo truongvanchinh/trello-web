@@ -16,14 +16,16 @@ import {
   selectCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 
 import ActiveCard from '~/components/Modal/ActiveCard/ActiveCard' //lesson 14
 import { socketIoInstance } from '~/socket'
+import { toast } from 'react-toastify'
 
 function Board() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   // Không dùng state của component nữa mà chuyển sang dùng state của Redux
   // const [board, setBoard] = useState(null)
   const board = useSelector(selectCurrentActiveBoard)
@@ -43,13 +45,22 @@ function Board() {
       dispatch(updateCurrentActiveBoard(updatedBoard))
     }
 
+    const onReceiveDeleteBoard = () => {
+      toast.error('This board has been deleted!')
+      navigate('/boards')
+    }
+
     socketIoInstance.on('BE_board_update', onReceiveUpdatedBoard)
     socketIoInstance.on('BOARD_MEMBER_UPDATED', onReceiveMemberUpdate)
+    socketIoInstance.on('BE_board_deleted', onReceiveDeleteBoard)
+
     return () => {
       socketIoInstance.off('BOARD_MEMBER_UPDATED', onReceiveMemberUpdate)
       socketIoInstance.off('BE_board_update', onReceiveUpdatedBoard)
+      socketIoInstance.off('BE_board_deleted', onReceiveDeleteBoard)
+
     }
-  }, [dispatch, boardId])
+  }, [dispatch, boardId, navigate])
 
 
   //gọi api khi kéo thả column xong

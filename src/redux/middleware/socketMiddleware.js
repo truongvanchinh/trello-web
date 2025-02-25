@@ -1,28 +1,35 @@
 let emitTimeout = null // Biến lưu timeout
-let lastBoardState = null // Lưu trạng thái cuối cùng đã emit
+let lastBoardStateString = '' // Lưu trạng thái cuối cùng dưới dạng chuỗi JSON
 
 const socketMiddleware = (socket) => (store) => (next) => (action) => {
   const result = next(action)
   const newBoard = store.getState().activeBoard.currentActiveBoard
 
-  const socketActions = ['activeBoard/updateCurrentActiveBoard']
+  const socketActions = ['activeBoard/updateCurrentActiveBoard', 'activeBoard/deleteCurrentActiveBoard']
 
   if (socketActions.includes(action.type)) {
-    // Nếu dữ liệu không thay đổi hoặc giống lần cuối emit, bỏ qua
-    if (
-      lastBoardState &&
-      JSON.stringify(lastBoardState) === JSON.stringify(newBoard)
-    ) {
+    const newBoardString = JSON.stringify(newBoard)
+
+    if (!newBoard) {
+      socket.emit('FE_board_deleted')
+      lastBoardStateString = ''
       return result
     }
 
+    // Nếu dữ liệu không thay đổi, bỏ qua
+    if (newBoardString === lastBoardStateString) {
+      return result
+    }
+
+    // Cập nhật trạng thái mới ngay lập tức để tránh tình trạng lưu bản cũ
+    lastBoardStateString = newBoardString
+
     // Xóa timeout cũ nếu có
-    clearTimeout(emitTimeout)
+    if (emitTimeout) clearTimeout(emitTimeout)
 
     // Chờ 500ms mới gửi emit, để tránh gửi liên tục khi có nhiều thay đổi nhanh
     emitTimeout = setTimeout(() => {
       socket.emit('FE_board_update', newBoard)
-      lastBoardState = newBoard // Cập nhật trạng thái cuối cùng đã emit
     }, 300)
   }
 
