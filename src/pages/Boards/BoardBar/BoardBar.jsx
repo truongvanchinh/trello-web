@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
-import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import VpnLockIcon from '@mui/icons-material/VpnLock'
@@ -8,10 +7,10 @@ import AddToDriveIcon from '@mui/icons-material/AddToDrive'
 import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
 
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import BoardUserGroup from './BoardUserGroup' // lesson 14
 import InviteBoardUser from './InviteBoardUser' //lesson 16
+import BoardSetting from './BoardSetting'
 
 const MENU_STYLES = {
   color: 'white',
@@ -83,6 +82,8 @@ function BoardBar({ board }) {
 
         {/* Xử lý hiển thị ds thành viên của Board */}
         <BoardUserGroup boardUsers={board?.FE_allUsers}/>
+
+        <BoardSetting />
       </Box>
     </Box>
   )

@@ -67,6 +67,9 @@ export const activeBoardlice = createSlice({
           })
         }
       }
+    },
+    deleteCurrentActiveBoard: (state) => {
+      state.currentActiveBoard = null
     }
   },
   // ExtraReducers: Nơi xử lý dữ liệu bất đồng bộ
@@ -110,7 +113,7 @@ export const activeBoardlice = createSlice({
 
 //* Để ý ở trên thì không thấy properties actions đầu cả, bởi vì
 //* những cái actions này đơn giản là được thằng redux tạo tự động theo tên của reducer nhé.
-export const { updateCurrentActiveBoard, updateCardInBoard } = activeBoardlice.actions
+export const { updateCurrentActiveBoard, updateCardInBoard, deleteCurrentActiveBoard } = activeBoardlice.actions
 
 //* Selectors: Là nơi dành cho các components bên dưới gọi bằng hook useSelector()
 //* để lấy dữ liệu từ trong kho redux store ra sử dụng
